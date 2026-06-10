@@ -1,0 +1,159 @@
+================================================================================
+                          NEOVIM CHEATSHEET
+                     leader = <Space>   escape = jk
+================================================================================
+
+MODES
+-----
+  i               Insert mode
+  v / V / C-v     Visual / linewise / block
+  :               Command mode
+  jk              Exit insert/visual → normal
+  Esc             Exit any mode → normal
+
+MOVEMENT (normal mode)
+----------------------
+  h j k l         Left / down / up / right
+  w / b           Next / prev word start
+  e               Word end
+  0 / $           Line start / end
+  gg / G          File start / end
+  { / }           Prev / next blank-line paragraph
+  %               Jump to matching bracket
+  f<char>         Jump to char on line (F = backward)
+  *               Search word under cursor forward
+  #               Search word under cursor backward
+  C-d / C-u       Half-page down / up (keeps cursor centred)
+  zz              Centre cursor on screen
+
+EDITING
+-------
+  x               Delete char under cursor
+  dd / yy / p     Delete / yank / paste line
+  D / C           Delete / change to end of line
+  ciw / diw       Change / delete inner word
+  ci" / di(       Change / delete inside quotes / parens
+  u / C-r         Undo / redo
+  .               Repeat last change
+  >>  /  <<       Indent / dedent line
+  =G              Auto-indent from cursor to end of file
+
+SEARCH
+------
+  /pattern        Search forward
+  ?pattern        Search backward
+  n / N           Next / prev match
+  <leader>/       Clear search highlight
+
+FILES / BUFFERS
+---------------
+  :e <file>       Open file
+  :w              Save
+  :q / :q!        Quit / force quit
+  <leader>w       Save (custom)
+  <leader>q       Quit (custom)
+  :bn / :bp       Next / prev buffer
+  C-^             Toggle last two buffers
+
+SPLITS / WINDOWS
+----------------
+  :vsp / :sp      Vertical / horizontal split
+  C-w h/j/k/l     Navigate splits
+  C-w =           Equalise split sizes
+  C-w q           Close split
+
+================================================================================
+                              PLUGINS
+================================================================================
+
+TELESCOPE (fuzzy finder)
+------------------------
+  <leader>ff      Find files in project
+  <leader>fg      Live grep (ripgrep) across project
+  <leader>fb      Switch open buffers
+  <leader>fr      Recent files
+
+  Inside telescope:
+  C-j / C-k       Move through results
+  Enter           Open
+  C-x / C-v       Open in split / vsplit
+  Esc             Close
+
+WHICH-KEY
+---------
+  <leader>        Pause ~0.5s to see available bindings popup
+                  (shows all <leader> mappings with descriptions)
+
+LSP  (active in .py files; .c files after: sudo apt install clangd)
+-------------------------------------------------------------------
+  K               Hover docs (type info, docstring)
+  gd              Go to definition
+  <leader>rn      Rename symbol
+  <leader>ca      Code action (fix suggestion)
+  [d / ]d         Prev / next diagnostic
+  :lua vim.diagnostic.open_float()   Show diagnostic detail
+
+COMPLETION (nvim-cmp)
+---------------------
+  <C-Space>       Trigger completion menu manually
+  Tab / S-Tab     Navigate menu items
+  Enter           Confirm selection
+  Esc             Close menu
+
+  (auto-trigger is OFF — completions only appear when you ask)
+
+TREESITTER
+----------
+  :TSInstall <lang>   Install parser for a language
+  :TSUpdate           Update all installed parsers
+  :InspectTree        Show parsed AST for current file (debug)
+  :checkhealth nvim-treesitter   Verify parser state
+
+  Installed parsers: python  c  lua  markdown  bash  vim  asm
+
+MASON (LSP server manager)
+--------------------------
+  :Mason              Open server browser / installer UI
+  g? (inside Mason)   Help
+
+================================================================================
+                           USEFUL COMMANDS
+================================================================================
+
+  :Lazy               Plugin manager UI
+  :Lazy sync          Update all plugins
+  :Lazy clean         Remove unused plugins
+  :checkhealth        Full nvim health report
+  :set filetype?      Show detected filetype
+  :InspectTree        AST viewer (treesitter debug)
+  :noa w              Write without triggering autocmds
+
+MARKS
+-----
+  ma                  Set mark 'a' at cursor
+  `a                  Jump to mark 'a' (exact position)
+  'a                  Jump to mark 'a' (line)
+  :marks              List all marks
+
+MACROS
+------
+  qa                  Record macro into register a
+  q                   Stop recording
+  @a                  Play macro a
+  @@                  Repeat last macro
+  5@a                 Play macro a 5 times
+
+================================================================================
+                         LSP SETUP REFERENCE
+================================================================================
+
+  Python    pylsp        active (installed via pip)
+  C / C++   clangd       install: sudo apt install clangd
+                         compile_commands.json: bear make
+  ASM       asm-lsp      install via :Mason (optional)
+
+  To add clangd:
+    ! sudo apt install clangd
+    (restart nvim — clangd config already wired in init.lua)
+
+================================================================================

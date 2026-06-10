@@ -1,0 +1,68 @@
+================================================================================
+                           TMUX CHEATSHEET
+                        prefix = Ctrl+a (custom)
+================================================================================
+
+SESSIONS
+--------
+  tmux new -s <name>          New named session
+  tmux attach -t <name>       Attach to session
+  tmux ls                     List sessions
+  lab-session [name]          Spin up lab layout (enum/shell/listener/notes)
+  prefix + s                  Interactive session switcher
+  prefix + $                  Rename session
+  prefix + d                  Detach from session
+
+WINDOWS
+-------
+  prefix + c                  New window
+  prefix + ,                  Rename window  (allow-rename off — names stick)
+  prefix + w                  List/switch windows
+  prefix + n / p              Next / prev window
+  prefix + 0-9                Switch to window by number
+  prefix + &                  Kill window
+
+PANES
+-----
+  prefix + |                  Split vertical   (custom, stays in cwd)
+  prefix + -                  Split horizontal (custom, stays in cwd)
+  prefix + h/j/k/l            Navigate panes   (custom, vim-style, deliberate)
+  Alt + arrow                 Navigate panes   (no prefix, fast reactive)
+  prefix + z                  Zoom / unzoom pane
+  prefix + x                  Kill pane
+  prefix + q                  Show pane numbers
+  prefix + { / }              Swap pane left / right
+  prefix + space              Cycle layouts
+  prefix + Ctrl+arrow         Resize pane (small steps)
+  prefix + Alt+arrow          Resize pane (large steps)
+  prefix + S                  Toggle synchronize panes (all panes get input)
+
+COPY MODE
+---------
+  prefix + [                  Enter copy mode
+  q                           Exit copy mode
+  v                           Begin selection (vi mode)
+  y                           Yank to system clipboard (xclip)
+  prefix + ]                  Paste buffer
+
+MISC
+----
+  prefix + r                  Reload ~/.tmux.conf (custom)
+  prefix + ?                  List all keybinds
+  prefix + :                  Command prompt
+  prefix + t                  Show clock
+
+================================================================================
+                             YOUR ~/.tmux.conf SUMMARY
+================================================================================
+
+  prefix       C-a
+  splits       | (vertical)  - (horizontal)  — both stay in cwd
+  navigation   prefix+hjkl (vim)  Alt+arrow (no prefix)
+  sync panes   prefix+S
+  copy yank    y → xclip clipboard
+  history      50000 lines
+  status bar   session | ip | date time  (bottom, green/grey)
+  window names auto-rename OFF — name your windows, they stay
+
+================================================================================

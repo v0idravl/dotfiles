@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Usage: lab-session [session-name]
+# Spins up a standard offensive lab tmux layout, or attaches if it exists.
+SESSION=${1:-lab}
+
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+    tmux attach-session -t "$SESSION"
+    exit 0
+fi
+
+tmux new-session  -d -s "$SESSION" -n enum
+tmux new-window   -t "$SESSION"    -n shell
+tmux new-window   -t "$SESSION"    -n listener
+tmux new-window   -t "$SESSION"    -n notes
+
+tmux select-window -t "$SESSION:enum"
+tmux attach-session -t "$SESSION"
