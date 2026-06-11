@@ -166,9 +166,4 @@ require('lazy').setup({
 
 }, {})
 
--- treesitter highlighting per-buffer when a parser is available
-vim.api.nvim_create_autocmd('FileType', {
-  callback = function() pcall(vim.treesitter.start) end,
-})
-
 vim.cmd.colorscheme('kanagawa-dragon')
