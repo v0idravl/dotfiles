@@ -120,7 +120,7 @@ require('lazy').setup({
     end,
   },
 
-  -- completion + LSP capabilities wired in config below
+  -- completion
   {
     'hrsh7th/nvim-cmp',
     lazy         = false,
@@ -132,7 +132,6 @@ require('lazy').setup({
       local cmp  = require('cmp')
       local caps = require('cmp_nvim_lsp').default_capabilities()
 
-      -- native LSP (nvim 0.11+) — no lspconfig needed
       vim.lsp.config('pylsp', {
         cmd          = { 'pylsp' },
         filetypes    = { 'python' },
@@ -141,7 +140,6 @@ require('lazy').setup({
       })
       vim.lsp.enable('pylsp')
 
-      -- clangd: install with `sudo apt install clangd`, then this auto-activates
       vim.lsp.config('clangd', {
         cmd          = { 'clangd', '--background-index' },
         filetypes    = { 'c', 'cpp', 'h' },

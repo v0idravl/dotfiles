@@ -4,6 +4,11 @@
 
 set -euo pipefail
 
+if [[ $EUID -eq 0 ]]; then
+  echo "run as your user, not root — sudo is used internally where needed"
+  exit 1
+fi
+
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 DRY_RUN=false
@@ -63,18 +68,35 @@ if ! $DRY_RUN; then
   chmod +x "$HOME/.local/bin/lab-session"
 fi
 
-# ── Alacritty ────────────────────────────────────────────────────
+# ── System packages ──────────────────────────────────────────────
 if ! $DRY_RUN; then
-  if ! command -v alacritty &>/dev/null; then
-    log "installing alacritty..."
-    sudo apt-get install -y alacritty
-  else
-    log "alacritty already installed: $(alacritty --version)"
-  fi
+  log "installing apt packages..."
+  sudo apt-get install -y alacritty clangd bat ripgrep fzf
+
   if command -v update-alternatives &>/dev/null; then
     sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty 2>/dev/null \
       && log "set alacritty as default x-terminal-emulator" \
-      || log "note: update-alternatives failed (non-Debian or alacritty not in alternatives db)"
+      || log "note: update-alternatives failed (alacritty not in alternatives db)"
+  fi
+
+  log "installing neovim (latest stable)..."
+  NVIM_TMP="$(mktemp -d)"
+  curl -fsSL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" \
+    | tar -xz -C "$NVIM_TMP"
+  sudo rm -rf /opt/nvim-linux-x86_64
+  sudo mv "$NVIM_TMP/nvim-linux-x86_64" /opt/
+  sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+  rm -rf "$NVIM_TMP"
+  log "neovim installed: $(/usr/local/bin/nvim --version | head -1)"
+fi
+
+# ── Python packages ───────────────────────────────────────────────
+if ! $DRY_RUN; then
+  log "installing python packages..."
+  if [[ $EUID -eq 0 ]]; then
+    pip3 install --break-system-packages python-lsp-server pwntools
+  else
+    pip3 install --break-system-packages --user python-lsp-server pwntools
   fi
 fi
 
@@ -84,14 +106,6 @@ if [[ -d "$BACKUP_DIR" ]]; then
   echo "originals backed up to: $BACKUP_DIR"
 fi
 echo ""
-
-# ── Post-install hints ───────────────────────────────────────────
-if ! $DRY_RUN; then
-  echo "next steps:"
-  echo "  source ~/.zshrc"
-  echo "  nvim  (runs :Lazy sync on first open)"
-  echo ""
-  echo "optional:"
-  echo "  sudo apt install alacritty clangd bat ripgrep fzf"
-  echo "  pip install pwntools python-lsp-server --break-system-packages"
-fi
+echo "next steps:"
+echo "  source ~/.zshrc"
+echo "  nvim  (runs :Lazy sync on first open)"
