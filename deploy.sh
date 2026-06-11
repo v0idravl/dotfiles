@@ -71,7 +71,7 @@ fi
 # ── System packages ──────────────────────────────────────────────
 if ! $DRY_RUN; then
   log "installing apt packages..."
-  sudo apt-get install -y alacritty clangd bat ripgrep fzf
+  sudo apt-get install -y alacritty clangd bat ripgrep fzf unzip
 
   if command -v update-alternatives &>/dev/null; then
     sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty 2>/dev/null \
@@ -88,6 +88,21 @@ if ! $DRY_RUN; then
   sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
   rm -rf "$NVIM_TMP"
   log "neovim installed: $(/usr/local/bin/nvim --version | head -1)"
+
+  if fc-list | grep -qi "JetBrainsMono Nerd Font"; then
+    log "JetBrainsMono Nerd Font already installed, skipping"
+  else
+    log "installing JetBrainsMono Nerd Font (prompt/status glyphs)..."
+    FONT_DIR="$HOME/.local/share/fonts"
+    FONT_TMP="$(mktemp -d)"
+    mkdir -p "$FONT_DIR"
+    curl -fsSL -o "$FONT_TMP/JetBrainsMono.zip" \
+      "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
+    unzip -oq "$FONT_TMP/JetBrainsMono.zip" -d "$FONT_DIR" "*.ttf"
+    rm -rf "$FONT_TMP"
+    fc-cache -f "$FONT_DIR"
+    log "nerd font installed to $FONT_DIR"
+  fi
 
   log "installing tree-sitter cli (required by nvim-treesitter main branch)..."
   mkdir -p "$HOME/.local/bin"

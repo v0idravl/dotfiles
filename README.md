@@ -30,6 +30,7 @@ Preview changes first with `./deploy.sh --dry-run`.
 - fzf (for ctrl-r/ctrl-t history and file search)
 - xclip (for tmux clipboard yank)
 - tree-sitter CLI + a C compiler (parser builds for nvim-treesitter `main`; deploy.sh installs the CLI to `~/.local/bin`)
+- JetBrainsMono Nerd Font (prompt/tmux glyphs; deploy.sh installs to `~/.local/share/fonts`)
 
 **Optional (activates LSP features):**
 ```bash
