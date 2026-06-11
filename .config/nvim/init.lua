@@ -80,17 +80,21 @@ require('lazy').setup({
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
 
-  -- treesitter parser manager — master branch: pre-built binaries, no tree-sitter-cli needed
+  -- treesitter parser manager — main branch (master is frozen and crashes on nvim 0.12)
   {
     'nvim-treesitter/nvim-treesitter',
-    branch = 'master',
+    branch = 'main',
     lazy   = false,
     build  = ':TSUpdate',
     config = function()
-      require('nvim-treesitter.configs').setup({
-        ensure_installed = { 'python', 'c', 'lua', 'markdown', 'bash', 'vim', 'asm' },
-        highlight        = { enable = true },
-        indent           = { enable = true },
+      require('nvim-treesitter').install({ 'python', 'c', 'lua', 'markdown', 'bash', 'vim', 'asm' })
+      -- main branch does not auto-start highlighting; per-buffer opt-in
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'python', 'c', 'lua', 'markdown', 'bash', 'sh', 'vim', 'asm' },
+        callback = function()
+          pcall(vim.treesitter.start)
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
       })
     end,
   },

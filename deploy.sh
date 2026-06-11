@@ -88,6 +88,13 @@ if ! $DRY_RUN; then
   sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
   rm -rf "$NVIM_TMP"
   log "neovim installed: $(/usr/local/bin/nvim --version | head -1)"
+
+  log "installing tree-sitter cli (required by nvim-treesitter main branch)..."
+  mkdir -p "$HOME/.local/bin"
+  curl -fsSL "https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz" \
+    | gunzip > "$HOME/.local/bin/tree-sitter"
+  chmod +x "$HOME/.local/bin/tree-sitter"
+  log "tree-sitter installed: $("$HOME/.local/bin/tree-sitter" --version)"
 fi
 
 # ── Python packages ───────────────────────────────────────────────
