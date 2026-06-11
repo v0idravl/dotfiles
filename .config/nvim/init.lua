@@ -66,12 +66,12 @@ vim.opt.rtp:prepend(lazypath)
 -- ── Plugins ────────────────────────────────────────────────────
 require('lazy').setup({
 
-  -- colorscheme — swap style: night / storm / moon / day
+  -- colorscheme — swap theme: wave / dragon / lotus
   {
-    'folke/tokyonight.nvim',
+    'rebelot/kanagawa.nvim',
     lazy     = false,
     priority = 1000,
-    opts     = { style = 'moon' },
+    opts     = { theme = 'dragon' },
   },
 
   -- fuzzy finder
@@ -132,20 +132,20 @@ require('lazy').setup({
       local cmp  = require('cmp')
       local caps = require('cmp_nvim_lsp').default_capabilities()
 
-      vim.lsp.config('pylsp', {
+      vim.lsp.config.pylsp = {
         cmd          = { 'pylsp' },
         filetypes    = { 'python' },
         root_markers = { 'pyproject.toml', 'setup.py', 'requirements.txt', '.git' },
         capabilities = caps,
-      })
+      }
       vim.lsp.enable('pylsp')
 
-      vim.lsp.config('clangd', {
+      vim.lsp.config.clangd = {
         cmd          = { 'clangd', '--background-index' },
         filetypes    = { 'c', 'cpp', 'h' },
         root_markers = { 'compile_commands.json', 'Makefile', '.git' },
         capabilities = caps,
-      })
+      }
       vim.lsp.enable('clangd')
 
       cmp.setup({
@@ -171,4 +171,4 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function() pcall(vim.treesitter.start) end,
 })
 
-vim.cmd.colorscheme('tokyonight')
+vim.cmd.colorscheme('kanagawa-dragon')
