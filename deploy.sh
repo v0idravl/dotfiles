@@ -15,6 +15,7 @@ declare -A FILES=(
   [".zshrc"]="$HOME/.zshrc"
   [".tmux.conf"]="$HOME/.tmux.conf"
   [".config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
+  [".config/alacritty/alacritty.toml"]="$HOME/.config/alacritty/alacritty.toml"
   [".local/bin/lab-session"]="$HOME/.local/bin/lab-session"
 )
 
@@ -62,6 +63,21 @@ if ! $DRY_RUN; then
   chmod +x "$HOME/.local/bin/lab-session"
 fi
 
+# ── Alacritty ────────────────────────────────────────────────────
+if ! $DRY_RUN; then
+  if ! command -v alacritty &>/dev/null; then
+    log "installing alacritty..."
+    sudo apt-get install -y alacritty
+  else
+    log "alacritty already installed: $(alacritty --version)"
+  fi
+  if command -v update-alternatives &>/dev/null; then
+    sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty 2>/dev/null \
+      && log "set alacritty as default x-terminal-emulator" \
+      || log "note: update-alternatives failed (non-Debian or alacritty not in alternatives db)"
+  fi
+fi
+
 echo ""
 echo "done."
 if [[ -d "$BACKUP_DIR" ]]; then
@@ -76,6 +92,6 @@ if ! $DRY_RUN; then
   echo "  nvim  (runs :Lazy sync on first open)"
   echo ""
   echo "optional:"
-  echo "  sudo apt install clangd bat ripgrep fzf"
+  echo "  sudo apt install alacritty clangd bat ripgrep fzf"
   echo "  pip install pwntools python-lsp-server --break-system-packages"
 fi
