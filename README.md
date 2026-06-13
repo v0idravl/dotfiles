@@ -24,6 +24,22 @@ cd ~/Projects/dotfiles
 Backs up any existing files to `~/.dotfiles-backup/<timestamp>/` before symlinking.
 Preview changes first with `./deploy.sh --dry-run`.
 
+### Kali "evil twin" set
+
+For a headless Kali box reached over SSH, deploy the differentiated set:
+
+```bash
+./deploy.sh --kali
+```
+
+Same ergonomics as the host config, but red/orange accents so it's obvious which
+machine you're on. Differences from the host set:
+
+- tmux prefix is the **default `C-b`** (host uses `C-a`)
+- tmux status bar sits at the **top**, shows **LAN IP + tun0 IP**, no clock/date
+- zsh prompt and nvim (kanagawa dragon) are retinted red/orange, with a skull in the prompt
+- no alacritty / Nerd Font install (colors and glyphs render on the SSH client)
+
 ## Requirements
 
 - zsh, tmux, neovim 0.12+, git
@@ -51,7 +67,7 @@ pip install pwntools python-lsp-server --break-system-packages
 
 See `docs/nvim_cheat.txt` and `docs/tmux_cheat.txt` for full references.
 
-**tmux prefix:** `C-a`  
+**tmux prefix:** `C-a` (host) · `C-b` (kali set)  
 **nvim leader:** `<Space>`
 
 | tmux | action |

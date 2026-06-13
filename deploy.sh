@@ -12,8 +12,15 @@ fi
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 DRY_RUN=false
+KALI=false
 
-[[ "${1:-}" == "--dry-run" ]] && DRY_RUN=true
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --kali)    KALI=true ;;
+    *) echo "unknown arg: $arg (use --dry-run and/or --kali)"; exit 1 ;;
+  esac
+done
 
 # ── Mapping: repo path → target path ────────────────────────────
 declare -A FILES=(
@@ -23,6 +30,16 @@ declare -A FILES=(
   [".config/alacritty/alacritty.toml"]="$HOME/.config/alacritty/alacritty.toml"
   [".local/bin/lab-session"]="$HOME/.local/bin/lab-session"
 )
+
+# Kali "evil twin": swap the three themed configs for the kali/ copies.
+# Targets stay the same ($HOME/...); only the repo source path changes.
+# (alacritty is host-side over SSH, so it stays the host copy.)
+if $KALI; then
+  unset 'FILES[.zshrc]' 'FILES[.tmux.conf]' 'FILES[.config/nvim/init.lua]'
+  FILES["kali/.zshrc"]="$HOME/.zshrc"
+  FILES["kali/.tmux.conf"]="$HOME/.tmux.conf"
+  FILES["kali/.config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
+fi
 
 # ── Helpers ──────────────────────────────────────────────────────
 log()    { echo "  $*"; }
@@ -56,6 +73,7 @@ link() {
 # ── Main ─────────────────────────────────────────────────────────
 echo ""
 echo "dotfiles deploy — $(date)"
+$KALI    && echo "(kali evil-twin set)"
 $DRY_RUN && echo "(dry run — no changes will be made)"
 echo ""
 
@@ -89,7 +107,9 @@ if ! $DRY_RUN; then
   rm -rf "$NVIM_TMP"
   log "neovim installed: $(/usr/local/bin/nvim --version | head -1)"
 
-  if fc-list | grep -qi "JetBrainsMono Nerd Font"; then
+  if $KALI; then
+    log "kali set: skipping Nerd Font install (glyphs render on the SSH client)"
+  elif fc-list | grep -qi "JetBrainsMono Nerd Font"; then
     log "JetBrainsMono Nerd Font already installed, skipping"
   else
     log "installing JetBrainsMono Nerd Font (prompt/status glyphs)..."
