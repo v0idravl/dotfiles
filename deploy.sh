@@ -31,6 +31,8 @@ declare -A FILES=(
   [".config/sway/config"]="$HOME/.config/sway/config"
   [".config/gtk-3.0/settings.ini"]="$HOME/.config/gtk-3.0/settings.ini"
   [".local/bin/lab-session"]="$HOME/.local/bin/lab-session"
+  [".ssh/config"]="$HOME/.ssh/config"
+  [".config/systemd/user/ssh-agent.service"]="$HOME/.config/systemd/user/ssh-agent.service"
 )
 
 # Kali "evil twin": swap the three themed configs for the kali/ copies.
@@ -129,6 +131,16 @@ if ! $DRY_RUN && ! $KALI; then
 
   log "enabling greetd (takes effect on next reboot)..."
   sudo systemctl enable greetd.service
+fi
+
+# ── ssh-agent: persistent per-user agent (host + kali) ────────────
+# Pairs with ~/.ssh/config (AddKeysToAgent) and SSH_AUTH_SOCK in .zshrc so
+# the key passphrase is entered once per boot. enable (not start) so it
+# comes up with the next user session; --user needs no sudo.
+if ! $DRY_RUN; then
+  log "enabling ssh-agent user service..."
+  systemctl --user enable ssh-agent.service 2>/dev/null \
+    || log "note: run 'systemctl --user enable ssh-agent.service' inside a user session"
 fi
 
 # ── System packages ──────────────────────────────────────────────

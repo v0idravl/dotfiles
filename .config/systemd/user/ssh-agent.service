@@ -1,0 +1,12 @@
+[Unit]
+Description=SSH authentication agent (per-user)
+Documentation=man:ssh-agent(1)
+
+[Service]
+Type=simple
+# %t = $XDG_RUNTIME_DIR (/run/user/UID); must match SSH_AUTH_SOCK in .zshrc
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/ssh-agent -D -a %t/ssh-agent.socket
+
+[Install]
+WantedBy=default.target

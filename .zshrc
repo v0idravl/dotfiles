@@ -98,9 +98,19 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
 [ -f /usr/share/doc/fzf/examples/completion.zsh ] && \
     source /usr/share/doc/fzf/examples/completion.zsh
 export PATH="$HOME/.local/bin:$PATH"
+# admin tools live in /usr/sbin; Debian doesn't add it for non-login shells
+export PATH="$PATH:/usr/sbin:/sbin"
 
 # DAGAR ops CLI
 export PATH="$PATH:/home/harry/Documents/dagar/bin"
+
+# collapse duplicate entries (this file is re-sourced in every tmux pane)
+typeset -U path PATH
+
+# ssh-agent: persistent per-user agent (systemd unit ssh-agent.service).
+# With AddKeysToAgent in ~/.ssh/config the key passphrase is entered once
+# per boot, not once per terminal.
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$UID}/ssh-agent.socket"
 
 if [ -z "$TMUX" ]; then
     tmux attach -t default 2>/dev/null || tmux new-session -s default
