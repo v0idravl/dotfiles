@@ -29,6 +29,7 @@ declare -A FILES=(
   [".config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
   [".config/alacritty/alacritty.toml"]="$HOME/.config/alacritty/alacritty.toml"
   [".config/sway/config"]="$HOME/.config/sway/config"
+  [".config/gtk-3.0/settings.ini"]="$HOME/.config/gtk-3.0/settings.ini"
   [".local/bin/lab-session"]="$HOME/.local/bin/lab-session"
 )
 
@@ -37,8 +38,9 @@ declare -A FILES=(
 # (alacritty is host-side over SSH, so it stays the host copy.)
 if $KALI; then
   unset 'FILES[.zshrc]' 'FILES[.tmux.conf]' 'FILES[.config/nvim/init.lua]'
-  # sway is host-only (the Kali box is headless) — don't deploy it there
+  # sway + GTK theme are host-only (the Kali box is headless)
   unset 'FILES[.config/sway/config]'
+  unset 'FILES[.config/gtk-3.0/settings.ini]'
   FILES["kali/.zshrc"]="$HOME/.zshrc"
   FILES["kali/.tmux.conf"]="$HOME/.tmux.conf"
   FILES["kali/.config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
@@ -87,6 +89,22 @@ done
 # lab-session needs execute bit
 if ! $DRY_RUN; then
   chmod +x "$HOME/.local/bin/lab-session"
+fi
+
+# ── GTK dark theme (host desktop only; the kali box is headless) ──
+# settings.ini (symlinked above) themes GTK3 apps. GTK4/libadwaita apps and
+# the cursor are dconf-backed, so apply those via gsettings here. Theme
+# providers: gnome-themes-extra (Adwaita-dark), breeze-icon-theme (icons).
+if ! $DRY_RUN && ! $KALI; then
+  log "installing GTK dark-theme assets..."
+  sudo apt-get install -y gnome-themes-extra breeze-icon-theme
+  if command -v gsettings &>/dev/null; then
+    log "applying GTK theme via gsettings (GTK4/libadwaita + cursor)..."
+    gsettings set org.gnome.desktop.interface gtk-theme    'Adwaita-dark' || true
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'  || true
+    gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita'      || true
+    gsettings set org.gnome.desktop.interface icon-theme   'breeze-dark'  || true
+  fi
 fi
 
 # ── System packages ──────────────────────────────────────────────
