@@ -1,0 +1,107 @@
+================================================================================
+                          SSH HEADLESS WORKFLOW
+                     headless kali, driven over ssh
+================================================================================
+
+OVERVIEW
+--------
+  The kali box runs headless (no desktop). All work happens in the terminal
+  over ssh; the LOCAL machine's alacritty renders everything. Nothing graphical
+  needs to exist on the box.
+
+  alacritty (laptop) -> tmux (host) -> ssh -> tmux (kali) -> shell/nvim
+                        ^^^^^^^^^^^                ^^^^^^^^^^
+                        outer (nested)             inner
+
+  The session is NESTED: the host terminal already runs tmux, and ssh'ing into
+  kali starts kali's own tmux. This matters for clipboard and X11 (see below).
+
+
+DEPLOY (kali "evil twin" set)
+-----------------------------
+  git clone <repo> ~/Projects/dotfiles      # on the kali box
+  cd ~/Projects/dotfiles
+  ./deploy.sh --kali                         # red/orange set, C-b prefix
+
+  Differs from the host set: prefix C-b (not C-a), status bar on top with
+  LAN + tun0 IPs and no clock, red/orange theme, skull prompt / dragon bar.
+  No alacritty or Nerd Font install (both are client-side over ssh).
+
+
+CONNECT
+-------
+  ssh harry@<kali-ip>            # kali .zshrc auto-attaches tmux on login
+  ssh -Y harry@<kali-ip>         # same, but with X11 forwarding (GUI apps)
+
+  Sessions survive disconnects: tmux keeps running on the box, just reconnect
+  and you are back where you left off.
+
+
+TMUX PERSISTENCE
+----------------
+  Drop the connection (wifi, sleep, roaming) and the kali tmux keeps running.
+  Reconnect with ssh and you re-attach automatically. No work is lost.
+  prefix on the kali box is C-b (host is C-a).
+
+
+CLIPBOARD (copy from the box -> local clipboard)
+------------------------------------------------
+  Uses OSC 52: an escape sequence that carries copied text back through the
+  ssh pipe to the local terminal's clipboard. No xclip, no X needed.
+
+  The chain crosses BOTH tmux layers, so both are configured:
+    kali  .tmux.conf : set-clipboard on + terminal-features clipboard
+    host  .tmux.conf : same (the outer tmux must RELAY the inner OSC 52 out)
+    alacritty        : OSC 52 writes allowed by default (no config needed)
+
+  tmux copy : enter copy mode (prefix [), select (v + motion), press y
+  nvim copy : yank to + register (clipboard=unnamedplus) -> built-in OSC 52
+              provider on the kali nvim pushes it to the local clipboard
+
+  NOTE: pasting the LOCAL clipboard back INTO the box is a different path -
+  use the terminal's own paste (Ctrl+Shift+V / middle click); it arrives as
+  keystrokes and always works.
+
+
+GUI / X11 ESCAPE HATCHES
+------------------------
+  When a GUI tool is genuinely needed, prefer these over running a desktop.
+
+  X11 forwarding (one-time on kali):
+    sudo apt install -y xauth
+    sudo sed -i 's/^#\?X11Forwarding.*/X11Forwarding yes/' /etc/ssh/sshd_config
+    sudo systemctl restart ssh
+  then connect with -Y and launch the app:
+    ssh -Y harry@<kali-ip>
+    xclock                       # test forwarding first
+    wireshark / firefox
+
+  !! tmux DISPLAY gotcha: the auto-attached tmux captures a stale $DISPLAY, so
+     X apps in the landing shell fail with "cannot open display". Fix:
+       prefix c                  # new window inherits the fresh DISPLAY, or
+       eval "$(tmux show-environment -s DISPLAY)"   # refresh current pane
+
+  Wireshark without X forwarding (capture on kali, render locally - smoother):
+    ssh harry@<kali-ip> "sudo tcpdump -i tun0 -U -w - 'not port 22'" \
+      | wireshark -k -i -
+
+  Browse THROUGH kali's network (e.g. over tun0) without a forwarded window:
+    ssh -D 1080 harry@<kali-ip>       # then point browser/proxychains at
+                                      # socks5 127.0.0.1:1080
+
+
+TROUBLESHOOTING
+---------------
+  copy not reaching clipboard
+    - is the session nested?  (host)  tmux display -p '#{client_termfeatures}'
+                                      -> must include "clipboard"
+    - same check inside the kali tmux
+    - reload order: host tmux first (source-file + detach/re-attach), then
+      restart the kali tmux (kill-server, reconnect)
+    - raw test inside kali tmux (clipboard should become KALIRAW):
+        printf '\033]52;c;%s\007' "$(printf KALIRAW | base64)"
+
+  X app: "cannot open display"
+    - see the tmux DISPLAY gotcha above
+    - confirm you connected with -Y and X11Forwarding yes on the box
+================================================================================

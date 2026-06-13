@@ -33,6 +33,21 @@ vim.opt.undodir        = vim.fn.expand('~/.vim/undodir')
 vim.opt.laststatus     = 2
 vim.opt.termguicolors  = true
 
+-- ── Clipboard over SSH (OSC 52) ────────────────────────────────
+-- Headless box: no X server / xclip, so force Neovim's built-in OSC 52
+-- provider. Yanks to the + register travel through tmux out to the local
+-- terminal's clipboard. Paste reads the in-editor register to avoid a slow /
+-- unsupported OSC 52 read query back through tmux.
+local osc52 = require('vim.ui.clipboard.osc52')
+local function reg_paste(reg)
+  return function() return vim.split(vim.fn.getreg(reg), '\n') end
+end
+vim.g.clipboard = {
+  name  = 'osc52',
+  copy  = { ['+'] = osc52.copy('+'), ['*'] = osc52.copy('*') },
+  paste = { ['+'] = reg_paste('+'),  ['*'] = reg_paste('*')  },
+}
+
 -- ── Keymaps ────────────────────────────────────────────────────
 vim.g.mapleader = ' '
 

@@ -12,6 +12,7 @@ Personal workstation config — zsh, tmux, neovim. Tuned for offensive security 
 | `.local/bin/lab-session` | spin up a standard lab tmux layout (enum/shell/listener/notes) |
 | `docs/nvim_cheat.txt` | neovim keybind reference for this config |
 | `docs/tmux_cheat.txt` | tmux keybind reference for this config |
+| `docs/ssh_workflow.txt` | headless-kali-over-ssh workflow (deploy, clipboard, X11) |
 
 ## Deploy
 
@@ -39,6 +40,9 @@ machine you're on. Differences from the host set:
 - tmux status bar sits at the **top**, shows **LAN IP + tun0 IP**, no clock/date
 - zsh prompt and nvim (kanagawa dragon) are retinted red/orange, with a skull in the prompt
 - no alacritty / Nerd Font install (colors and glyphs render on the SSH client)
+
+See `docs/ssh_workflow.txt` for the full workflow — connecting, tmux persistence,
+the OSC 52 clipboard chain, and the X11 / remote-capture / SOCKS escape hatches.
 
 ## Requirements
 
