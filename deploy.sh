@@ -107,6 +107,30 @@ if ! $DRY_RUN && ! $KALI; then
   fi
 fi
 
+# ── Wayland login: greetd on VT1 (host desktop only) ──────────────
+# tuigreet (in greetd) launches sway. greetd is pinned to vt = 1, so
+# getty@tty1 MUST be masked or the two fight over the console — the
+# symptom is a garbled greeter that bounces you back to a text login.
+# Text consoles stay available on Ctrl+Alt+F2–F6 (logind autovt).
+# greetd is only enabled here, never started/restarted: it takes effect
+# on next reboot so this never kills the session running deploy.sh.
+if ! $DRY_RUN && ! $KALI; then
+  log "installing sway desktop + greetd login stack..."
+  sudo apt-get install -y \
+    greetd tuigreet sway swaylock swayidle waybar fuzzel mako-notifier \
+    network-manager-gnome lxqt-policykit brightnessctl grim slurp \
+    wl-clipboard wireplumber
+
+  log "installing greetd config to /etc/greetd/config.toml..."
+  sudo install -Dm644 "$DOTFILES/etc/greetd/config.toml" /etc/greetd/config.toml
+
+  log "masking getty@tty1 (greetd owns VT1)..."
+  sudo systemctl mask getty@tty1.service
+
+  log "enabling greetd (takes effect on next reboot)..."
+  sudo systemctl enable greetd.service
+fi
+
 # ── System packages ──────────────────────────────────────────────
 if ! $DRY_RUN; then
   log "installing apt packages..."

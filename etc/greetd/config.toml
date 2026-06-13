@@ -1,0 +1,14 @@
+# DAGAR — minimal greeter: tuigreet launching sway
+#   --time      show a clock
+#   --remember  remember last username
+#   --asterisks mask the password with *
+#   --cmd sway  default session command
+#
+# greetd owns VT1. getty@tty1 is masked by deploy.sh so the two don't
+# fight over the console (text fallbacks remain on Ctrl+Alt+F2–F6).
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --time --remember --asterisks --cmd sway"
+user = "_greetd"
