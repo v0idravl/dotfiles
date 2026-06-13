@@ -28,6 +28,7 @@ declare -A FILES=(
   [".tmux.conf"]="$HOME/.tmux.conf"
   [".config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
   [".config/alacritty/alacritty.toml"]="$HOME/.config/alacritty/alacritty.toml"
+  [".config/sway/config"]="$HOME/.config/sway/config"
   [".local/bin/lab-session"]="$HOME/.local/bin/lab-session"
 )
 
@@ -36,6 +37,8 @@ declare -A FILES=(
 # (alacritty is host-side over SSH, so it stays the host copy.)
 if $KALI; then
   unset 'FILES[.zshrc]' 'FILES[.tmux.conf]' 'FILES[.config/nvim/init.lua]'
+  # sway is host-only (the Kali box is headless) — don't deploy it there
+  unset 'FILES[.config/sway/config]'
   FILES["kali/.zshrc"]="$HOME/.zshrc"
   FILES["kali/.tmux.conf"]="$HOME/.tmux.conf"
   FILES["kali/.config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
