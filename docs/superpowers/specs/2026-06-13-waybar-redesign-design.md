@@ -63,8 +63,8 @@ Kanagawa Dragon palette, reused verbatim:
 
 ### Left modules
 - `sway/workspaces` — numbered. Active = bold `#e6c384`; inactive = `#727169`;
-  urgent = `#c4746e`. Persistent workspaces 1–5 so the muscle-memory targets always
-  show even when empty. Click switches workspace.
+  urgent = `#c4746e`. Dynamic (sway default): workspaces appear/disappear as used,
+  unchanged from current behavior. Click switches workspace.
 - `sway/mode` — **resize-mode indicator.** Shows a bold accent `RESIZE` badge only
   while in the `resize` mode (entered with `Mod+r`); hidden otherwise.
 - `sway/window` — focused window title, truncated to a max length.
