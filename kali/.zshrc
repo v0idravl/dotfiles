@@ -32,7 +32,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 autoload -Uz colors && colors
 
 configure_prompt() {
-    PROMPT=$'%F{#c34043}┌──%F{#c4746e}(%B%F{#e82424} v0idravl%b%F{#c4746e})%F{#c34043}-%F{#c4746e}[%B%F{#ffa066} %(6~.%-1~/…/%4~.%5~)%b%F{#c4746e}]\n%F{#c34043}└─%B%F{#e82424} %b%F{reset} '
+    PROMPT=$'%F{#c34043}┌──%F{#c4746e}(%B%F{#e82424} v0idravl%b%F{#c4746e})%F{#c34043}-%F{#c4746e}[%B%F{#ffa066} %(6~.%-1~/…/%4~.%5~)%b%F{#c4746e}]\n%F{#c34043}└─%B%F{#e82424}󰚌 %b%F{reset} '
 }
 configure_prompt
 
