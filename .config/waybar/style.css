@@ -39,12 +39,15 @@ window#waybar {
     padding: 0 10px;
 }
 
-/* ── right cluster: flat, │ dividers via border-left ── */
+/* ── right cluster: flat, no dividers, generous spacing ── */
 #cpu, #memory, #temperature, #backlight, #idle_inhibitor,
-#pulseaudio, #network, #battery, #clock, #tray, #custom-power {
-    padding: 0 10px;
-    border-left: 1px solid #54546d;
+#pulseaudio, #network, #battery, #tray, #custom-power {
+    padding: 0 9px;
+    margin: 0 3px;
 }
+/* a little breathing room where the right cluster meets the window title */
+#cpu { margin-left: 8px; }
+#custom-power { margin-right: 6px; }
 
 #cpu, #memory, #temperature, #backlight { color: #c5c9c5; }
 #temperature.critical { color: #c4746e; }
@@ -62,8 +65,6 @@ window#waybar {
 #battery.warning { color: #e6c384; }
 #battery.critical { color: #c4746e; }
 #battery.charging { color: #98bb6c; }
-
-#clock { color: #938aa9; }
 
 #tray { color: #c5c9c5; }
 
