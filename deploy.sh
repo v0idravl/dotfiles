@@ -138,6 +138,19 @@ if ! $DRY_RUN && ! $KALI; then
   sudo systemctl enable greetd.service
 fi
 
+# ── Backlight: let the video group set brightness without root ────
+# /sys/class/backlight/*/brightness is root-only by default, so brightnessctl
+# (Fn-brightness keys + waybar scroll) fails for the user. This udev rule
+# chgrp's it to 'video'; harry is already a member. reload+trigger applies it
+# now without a reboot.
+if ! $DRY_RUN && ! $KALI; then
+  log "installing backlight udev rule (video-group brightness)..."
+  sudo install -Dm644 "$DOTFILES/etc/udev/rules.d/90-backlight.rules" \
+    /etc/udev/rules.d/90-backlight.rules
+  sudo udevadm control --reload-rules
+  sudo udevadm trigger -s backlight
+fi
+
 # ── ssh-agent: persistent per-user agent (host + kali) ────────────
 # Pairs with ~/.ssh/config (AddKeysToAgent) and SSH_AUTH_SOCK in .zshrc so
 # the key passphrase is entered once per boot. enable (not start) so it

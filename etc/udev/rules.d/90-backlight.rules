@@ -1,0 +1,8 @@
+# Let the 'video' group set display/keyboard brightness without root.
+# brightnessctl writes /sys/class/backlight/*/brightness, which is root-only
+# by default — so Fn-brightness keys and waybar's brightness scroll fail with
+# "run this program with root privileges". This rule hands the node to the
+# 'video' group (harry is already a member). brightnessctl ships an equivalent
+# rule upstream, but the Debian package omits it.
+ACTION=="add|change", SUBSYSTEM=="backlight", RUN+="/usr/bin/chgrp video /sys/class/backlight/%k/brightness", RUN+="/usr/bin/chmod g+w /sys/class/backlight/%k/brightness"
+ACTION=="add|change", SUBSYSTEM=="leds", KERNEL=="*kbd_backlight", RUN+="/usr/bin/chgrp video /sys/class/leds/%k/brightness", RUN+="/usr/bin/chmod g+w /sys/class/leds/%k/brightness"
