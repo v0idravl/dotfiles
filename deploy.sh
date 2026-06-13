@@ -29,6 +29,8 @@ declare -A FILES=(
   [".config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
   [".config/alacritty/alacritty.toml"]="$HOME/.config/alacritty/alacritty.toml"
   [".config/sway/config"]="$HOME/.config/sway/config"
+  [".config/waybar/config.jsonc"]="$HOME/.config/waybar/config.jsonc"
+  [".config/waybar/style.css"]="$HOME/.config/waybar/style.css"
   [".config/gtk-3.0/settings.ini"]="$HOME/.config/gtk-3.0/settings.ini"
   [".local/bin/lab-session"]="$HOME/.local/bin/lab-session"
   [".ssh/config"]="$HOME/.ssh/config"
@@ -43,6 +45,9 @@ if $KALI; then
   # sway + GTK theme are host-only (the Kali box is headless)
   unset 'FILES[.config/sway/config]'
   unset 'FILES[.config/gtk-3.0/settings.ini]'
+  # waybar is host-only (the Kali box is headless)
+  unset 'FILES[.config/waybar/config.jsonc]'
+  unset 'FILES[.config/waybar/style.css]'
   FILES["kali/.zshrc"]="$HOME/.zshrc"
   FILES["kali/.tmux.conf"]="$HOME/.tmux.conf"
   FILES["kali/.config/nvim/init.lua"]="$HOME/.config/nvim/init.lua"
