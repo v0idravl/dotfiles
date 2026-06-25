@@ -41,9 +41,8 @@ exec mako
 exec nm-applet --indicator
 # GUI auth prompts (pkexec/polkit)
 exec lxqt-policykit-agent
-# idle: lock at 5m, screen off at 10m, lock before sleep
+# idle: screen off at 10m, lock before sleep (no auto-lock on idle)
 exec swayidle -w \
-    timeout 300 'swaylock -f -c 0d0d0d' \
     timeout 600 'swaymsg "output * dpms off"' \
     resume      'swaymsg "output * dpms on"' \
     before-sleep 'swaylock -f -c 0d0d0d'
