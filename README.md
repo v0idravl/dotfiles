@@ -1,8 +1,22 @@
-# dotfiles
+```text
+██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝██╔════╝
+██║  ██║██║   ██║   ██║   █████╗  ██║██║     █████╗  ███████╗
+██║  ██║██║   ██║   ██║   ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
+╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
+   zsh · tmux · neovim — tuned for offensive security / lab work
+```
 
-Personal workstation config — zsh, tmux, neovim. Tuned for offensive security / lab work on Debian.
+![shell](https://img.shields.io/badge/shell-zsh-89E051?logo=zsh&logoColor=white)
+![editor](https://img.shields.io/badge/editor-neovim%200.12%2B-57A143?logo=neovim&logoColor=white)
+![mux](https://img.shields.io/badge/multiplexer-tmux-1BB91F?logo=tmux&logoColor=white)
+![platform](https://img.shields.io/badge/platform-Debian%20%2F%20Kali-A80030?logo=debian&logoColor=white)
 
-## What's here
+Personal workstation config — zsh, tmux, neovim. Tuned for offensive security / lab work on
+Debian, with a differentiated **Kali "evil twin" set** for headless boxes reached over SSH.
+
+## 🗂 What's here
 
 | File | Purpose |
 |---|---|
@@ -14,7 +28,7 @@ Personal workstation config — zsh, tmux, neovim. Tuned for offensive security 
 | `docs/tmux_cheat.txt` | tmux keybind reference for this config |
 | `docs/ssh_workflow.txt` | headless-kali-over-ssh workflow (deploy, clipboard, X11) |
 
-## Deploy
+## ⚡ Deploy
 
 ```bash
 git clone git@github.com:v0idravl/dotfiles.git ~/Projects/dotfiles
@@ -25,7 +39,7 @@ cd ~/Projects/dotfiles
 Backs up any existing files to `~/.dotfiles-backup/<timestamp>/` before symlinking.
 Preview changes first with `./deploy.sh --dry-run`.
 
-### Kali "evil twin" set
+### 💀 Kali "evil twin" set
 
 For a headless Kali box reached over SSH, deploy the differentiated set:
 
@@ -33,18 +47,18 @@ For a headless Kali box reached over SSH, deploy the differentiated set:
 ./deploy.sh --kali
 ```
 
-Same ergonomics as the host config, but red/orange accents so it's obvious which
-machine you're on. Differences from the host set:
+Same ergonomics as the host config, but red/orange accents so it's obvious which machine you're
+on. Differences from the host set:
 
 - tmux prefix is the **default `C-b`** (host uses `C-a`)
 - tmux status bar sits at the **top**, shows **LAN IP + tun0 IP**, no clock/date
 - zsh prompt and nvim (kanagawa dragon) are retinted red/orange, with a skull in the prompt
 - no alacritty / Nerd Font install (colors and glyphs render on the SSH client)
 
-See `docs/ssh_workflow.txt` for the full workflow — connecting, tmux persistence,
-the OSC 52 clipboard chain, and the X11 / remote-capture / SOCKS escape hatches.
+See `docs/ssh_workflow.txt` for the full workflow — connecting, tmux persistence, the OSC 52
+clipboard chain, and the X11 / remote-capture / SOCKS escape hatches.
 
-## Requirements
+## 🛠 Requirements
 
 - zsh, tmux, neovim 0.12+, git
 - fzf (for ctrl-r/ctrl-t history and file search)
@@ -53,12 +67,13 @@ the OSC 52 clipboard chain, and the X11 / remote-capture / SOCKS escape hatches.
 - JetBrainsMono Nerd Font (prompt/tmux glyphs; deploy.sh installs to `~/.local/share/fonts`)
 
 **Optional (activates LSP features):**
+
 ```bash
 sudo apt install clangd bat ripgrep
 pip install pwntools python-lsp-server --break-system-packages
 ```
 
-## Neovim plugins (auto-installed by lazy.nvim on first launch)
+## 🔌 Neovim plugins (auto-installed by lazy.nvim on first launch)
 
 - **kanagawa** — colorscheme (dragon variant)
 - **telescope** — fuzzy find files, grep, buffers
@@ -67,12 +82,11 @@ pip install pwntools python-lsp-server --break-system-packages
 - **nvim-cmp** — completion (manual trigger: `<C-Space>`)
 - **which-key** — keybinding popup on `<leader>` pause
 
-## Key bindings quick ref
+## ⌨️ Key bindings quick ref
 
 See `docs/nvim_cheat.txt` and `docs/tmux_cheat.txt` for full references.
 
-**tmux prefix:** `C-a` (host) · `C-b` (kali set)  
-**nvim leader:** `<Space>`
+**tmux prefix:** `C-a` (host) · `C-b` (kali set) · **nvim leader:** `<Space>`
 
 | tmux | action |
 |---|---|
