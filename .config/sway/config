@@ -9,10 +9,11 @@ set $term alacritty
 set $menu fuzzel
 
 ### Appearance ###
-# Solid background matching the alacritty bg.
-# For an image instead, comment the line below and use:
-#   output * bg ~/Pictures/DAGAR.png fill
-output * bg #0d0d0d solid_color
+# Wallpaper: centered on black. Use ~/.local/bin/set-wallpaper SRC [SIZE]
+# to composite an image onto a 1920x1080 black canvas at ~/Pictures/wallpaper.png.
+# For a solid colour instead, swap the line below for:
+#   output * bg #0d0d0d solid_color
+output * bg ~/Pictures/wallpaper.png center #000000
 font pango:JetBrains Mono 10
 # cursor theme (breeze_cursors was removed with KDE; Adwaita ships cursors)
 seat seat0 xcursor_theme Adwaita 24
