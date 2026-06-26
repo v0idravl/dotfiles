@@ -64,6 +64,7 @@ alias bd='popd'
 alias v=nvim
 alias vim=nvim
 alias t=tmux
+alias c=clear
 alias bat='batcat'          # Debian ships bat as batcat
 alias cat='batcat --paging=never'
 
